@@ -1,12 +1,11 @@
 #+TITLE: doom-emacs-private
 
-* doom-emacs-private
-
 My private module for [doom-emacs](https://github.com/hlissner/doom-emacs).
+
 Most of it comes from hlissner's own private [[https://github.com/hlissner/doom-emacs-private][config]].
 
 ** Install
 
 #+begin_src bash
-git clone https://github.com/hlissner/doom-emacs-private ~/.config/doom
+git clone https://github.com/esstorm/doom-emacs-private ~/.config/doom
 #+end_src
