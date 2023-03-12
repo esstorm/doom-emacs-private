@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: org subtree
+# key: ost
+# --
+** $1
+  :PROPERTIES:
+  :ANKI_DECK:  $2
+  :ANKI_NOTE_TYPE: Basic
+  :END:
+*** Front
+$1
+*** Back
+$3

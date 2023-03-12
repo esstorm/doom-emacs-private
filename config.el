@@ -2,7 +2,8 @@
 
 (setq
       ;; doom-scratch-initial-major-mode 'lisp-interaction-mode
-      doom-theme 'doom-dracula
+      ;; doom-theme 'doom-dracula
+      doom-theme 'doom-material
 
       ;; lsp-ui-sideline is redundant with eldoc and much more invasive, so
       ;; disable it by default.
@@ -14,11 +15,39 @@
 
 ;; "monospace" means use the system default. However, the default is usually two
 ;; points larger than I'd like, so I specify size 12 here.
-(setq doom-font (font-spec :family "SF Mono" :size 18 :weight 'semi-light))
+(setq doom-font (font-spec :family "JetBrains Mono" :size 18 :weight 'semi-light))
+
+
+;;; Org-mode LaTex stuff
+;; LaTex class
+;; (defun nd-email-filter (contents backend info)
+;;   (let ((email (plist-get info :email)))
+;;     (replace-regexp-in-string "@EMAIL@" email contents t)))
+
+;; (add-to-list 'org-export-filter-final-output-functions (function nd-email-filter))
+
+(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+
+(with-eval-after-load "ox-latex"
+  (add-to-list 'org-latex-classes
+               '("jdf2"
+                 "\\documentclass{jdf2}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
+;; Evil escape sequence with 'jj'
+(setq key-chord-two-keys-delay 0.5)
+(key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+(key-chord-mode 1)
 
 ;; Prevents some cases of Emacs flickering
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
 
+;; Bug in Doom Emacs?
+(setq ob-async-no-async-languages-alist '("jupyter-python"))
 
 ;;
 ;;; Keybinds
@@ -37,6 +66,7 @@
                  (fboundp 'evil-jump-item)
                  #'evil-jump-item)
       :leader
+      "a p t" #'anki-editor-push-tree
       "h L" #'global-keycast-mode
       "f t" #'find-in-dotfiles
       "f T" #'browse-dotfiles
@@ -135,7 +165,20 @@
 ;;; :ui modeline
 ;; (custom-set-faces!
 ;;   `(doom-modeline-bar-inactive :background ,(face-background 'mode-line-inactive)))
+;;
+;; (setq doom-modeline-minor-modes (fboundp 'minions-mode))
+;; (setq nyan-wavy-trail t nyan-minimum-window-width 96 nyan-bar-length 12)
+;; (use-package nyan-mode
+;;   :config
+;;   (nyan-mode t)
+;;   (nyan-animate-cat t))
 
+(use-package nyan-mode
+  :init
+  (setq-default nyan-animate-nyancat t
+                nyan-wavy-trail t)
+  :config
+  (nyan-mode t))
 ;; (use-package! keypression
 ;;   :defer t
 ;;   :config
@@ -153,3 +196,47 @@
 
 (custom-set-faces!
   `(markdown-code-face :background ,(doom-darken 'bg 0.075)))
+
+;; Anki
+(use-package anki-editor
+  :after org
+  ;; :bind (:map org-mode-map
+  ;;             :leader
+  ;;             "a p t" #'anki-editor-push-tree)
+              ;; ("<f12>" . anki-editor-cloze-region-auto-incr)
+              ;; ("<f11>" . anki-editor-cloze-region-dont-incr)
+              ;; ("<f10>" . anki-editor-reset-cloze-number)
+              ;; ("<f9>"  . anki-editor-push-tree))
+  :hook (org-capture-after-finalize . anki-editor-reset-cloze-number) ; Reset cloze-number after each capture.
+  :config
+  (setq anki-editor-create-decks t ;; Allow anki-editor to create a new deck if it doesn't exist
+        anki-editor-org-tags-as-anki-tags t)
+
+  (defun anki-editor-cloze-region-auto-incr (&optional arg)
+    "Cloze region without hint and increase card number."
+    (interactive)
+    (anki-editor-cloze-region my-anki-editor-cloze-number "")
+    (setq my-anki-editor-cloze-number (1+ my-anki-editor-cloze-number))
+    (forward-sexp))
+  (defun anki-editor-cloze-region-dont-incr (&optional arg)
+    "Cloze region without hint using the previous card number."
+    (interactive)
+    (anki-editor-cloze-region (1- my-anki-editor-cloze-number) "")
+    (forward-sexp))
+  (defun anki-editor-reset-cloze-number (&optional arg)
+    "Reset cloze number to ARG or 1"
+    (interactive)
+    (setq my-anki-editor-cloze-number (or arg 1)))
+  (defun anki-editor-push-tree ()
+    "Push all notes under a tree."
+    (interactive)
+    (anki-editor-push-notes '(4))
+    (anki-editor-reset-cloze-number))
+  ;; Initialize
+  (anki-editor-reset-cloze-number)
+  )
+
+
+;; Yasnippet
+(setq yas-snippet-dirs (append yas-snippet-dirs
+        '("~/.config/doom/snippets"))) ;; replace with your folder for snippets
