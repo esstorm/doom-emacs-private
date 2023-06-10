@@ -22,4 +22,7 @@
 ;; Create Anki flashcards from Emacs
 (package! anki-connect)
 (package! anki-editor)
+
+;; C++ autocomplete
+(package! company-tabnine)
 ;; (package! walkman :recipe (:host github :repo "abrochard/walkman"))
