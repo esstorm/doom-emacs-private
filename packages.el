@@ -23,6 +23,7 @@
 (package! anki-connect)
 (package! anki-editor)
 
-;; C++ autocomplete
+;; C++
 (package! company-tabnine)
+;; (package! dap-mode)
 ;; (package! walkman :recipe (:host github :repo "abrochard/walkman"))

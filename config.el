@@ -2,8 +2,8 @@
 
 (setq
       ;; doom-scratch-initial-major-mode 'lisp-interaction-mode
-      ;; doom-theme 'doom-dracula
-      doom-theme 'doom-material
+      doom-theme 'doom-dracula
+      ;; doom-theme 'material
 
       ;; lsp-ui-sideline is redundant with eldoc and much more invasive, so
       ;; disable it by default.
@@ -15,7 +15,17 @@
 
 ;; "monospace" means use the system default. However, the default is usually two
 ;; points larger than I'd like, so I specify size 12 here.
-(setq doom-font (font-spec :family "JetBrains Mono" :size 18 :weight 'semi-light))
+(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 18 :weight 'semi-light))
+
+;;
+;;; Debuggger
+(after! dap-mode
+  (setq dap-python-debugger 'debugpy)
+  (setq dap-auto-configure-features '(sessions locals controls tooltip)))
+; to debug with DAP-MODE
+;; (setq dap-auto-configure-mode t)
+;; (requires 'dap-cpptools)
+
 
 
 ;;; Org-mode LaTex stuff
@@ -79,6 +89,8 @@
 
 ;; I prefer search matching to be ordered; it's more precise
 (add-to-list 'ivy-re-builders-alist '(counsel-projectile-find-file . ivy--regex-plus))
+(setq
+ projectile-project-search-path '("~/Code" "~/Uni/"))
 
 ;; Switch to the new window after splitting
 (setq evil-split-window-below t
