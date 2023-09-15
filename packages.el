@@ -27,3 +27,6 @@
 (package! company-tabnine)
 ;; (package! dap-mode)
 ;; (package! walkman :recipe (:host github :repo "abrochard/walkman"))
+
+;; Fix all-the-icon mapping issues
+(package! doom-modeline :pin "918730eff72e155cfb31b012493a7f425bc48ff8")

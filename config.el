@@ -1,14 +1,14 @@
 ;;; ~/.config/doom/config.el -*- lexical-binding: t; -*-
 
 (setq
-      ;; doom-scratch-initial-major-mode 'lisp-interaction-mode
-      doom-theme 'doom-dracula
-      ;; doom-theme 'material
+ ;; doom-scratch-initial-major-mode 'lisp-interaction-mode
+ doom-theme 'doom-dracula
+ ;; doom-theme 'material
 
-      ;; lsp-ui-sideline is redundant with eldoc and much more invasive, so
-      ;; disable it by default.
-      lsp-ui-sideline-enable nil
-      lsp-enable-symbol-highlighting nil)
+ ;; lsp-ui-sideline is redundant with eldoc and much more invasive, so
+ ;; disable it by default.
+ lsp-ui-sideline-enable nil
+ lsp-enable-symbol-highlighting nil)
 
 ;;
 ;;; UI
@@ -16,17 +16,27 @@
 ;; "monospace" means use the system default. However, the default is usually two
 ;; points larger than I'd like, so I specify size 12 here.
 (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 18 :weight 'semi-light))
+;; (setq doom-font (font-spec :family "FiraCode Nerd Font Mono" :size 18 :weight 'semi-light))
 
 ;;
 ;;; Debuggger
 (after! dap-mode
   (setq dap-python-debugger 'debugpy)
   (setq dap-auto-configure-features '(sessions locals controls tooltip)))
-; to debug with DAP-MODE
+                                        ; to debug with DAP-MODE
 ;; (setq dap-auto-configure-mode t)
 ;; (requires 'dap-cpptools)
 
 
+;;; Beautify markdown
+(custom-set-faces!
+  '(markdown-header-delimiter-face :foreground "#616161" :height 0.9)
+  '(markdown-header-face-1 :height 1.8 :foreground "#A3BE8C" :weight extra-bold :inherit markdown-header-face)
+  '(markdown-header-face-2 :height 1.4 :foreground "#EBCB8B" :weight extra-bold :inherit markdown-header-face)
+  '(markdown-header-face-3 :height 1.2 :foreground "#D08770" :weight extra-bold :inherit markdown-header-face)
+  '(markdown-header-face-4 :height 1.15 :foreground "#BF616A" :weight bold :inherit markdown-header-face)
+  '(markdown-header-face-5 :height 1.1 :foreground "#b48ead" :weight bold :inherit markdown-header-face)
+  '(markdown-header-face-6 :height 1.05 :foreground "#5e81ac" :weight semi-bold :inherit markdown-header-face))
 
 ;;; Org-mode LaTex stuff
 ;; LaTex class
@@ -35,6 +45,52 @@
 ;;     (replace-regexp-in-string "@EMAIL@" email contents t)))
 
 ;; (add-to-list 'org-export-filter-final-output-functions (function nd-email-filter))
+
+;;; Agenda
+;;;
+(after! org
+  (setq org-agenda-files '("~/org/agenda.org")))
+
+
+;;; https://emacs.stackexchange.com/questions/46479/how-to-set-a-tangled-parent-directory-for-each-subtree-in-org-mode
+;;; use :tangle-dir to specify which directory to tangle file to
+(defun org-in-tangle-dir (sub-path)
+  "Expand the SUB-PATH into the directory given by the tangle-dir
+property if that property exists, else use the
+`default-directory'."
+  (expand-file-name sub-path
+                    (or
+                     (org-entry-get (point) "tangle-dir" 'inherit)
+                     (default-directory))))
+
+
+(setq org-html-checkbox-type 'html)
+
+(setq
+ ;; org-fancy-priorities-list '("[A]" "[B]" "[C]")
+ ;; org-fancy-priorities-list '("❗" "[B]" "[C]")
+ org-fancy-priorities-list '("🟥" "🟧" "🟨")
+ org-priority-faces
+ '((?A :foreground "#ff6c6b" :weight bold)
+   (?B :foreground "#98be65" :weight bold)
+   (?C :foreground "#c678dd" :weight bold))
+ org-agenda-block-separator 8411)
+
+(setq org-agenda-custom-commands
+      '(("v" "A better agenda view"
+         ((tags "PRIORITY=\"A\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
+          (tags "PRIORITY=\"B\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "Medium-priority unfinished tasks:")))
+          (tags "PRIORITY=\"C\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "Low-priority unfinished tasks:")))
+          (agenda "")
+          (alltodo "")))))
+
+;;; LaTex
 
 (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
 
@@ -49,7 +105,7 @@
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 ;; Evil escape sequence with 'jj'
-(setq key-chord-two-keys-delay 0.5)
+(setq key-chord-two-keys-delay 0.8)
 (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
 (key-chord-mode 1)
 
@@ -87,11 +143,6 @@
 ;;
 ;;; Modules
 
-;; I prefer search matching to be ordered; it's more precise
-(add-to-list 'ivy-re-builders-alist '(counsel-projectile-find-file . ivy--regex-plus))
-(setq
- projectile-project-search-path '("~/Code" "~/Uni/"))
-
 ;; Switch to the new window after splitting
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
@@ -104,14 +155,14 @@
 (setq org-plantuml-jar-path "~/bin/plantuml.jar")
 
 ;;; :tools magit
-;(setq magit-repository-directories '(("~/projects" . 2))
-      ;magit-save-repository-buffers nil
+                                        ;(setq magit-repository-directories '(("~/projects" . 2))
+                                        ;magit-save-repository-buffers nil
       ;;; Don't restore the wconf after quitting magit, it's jarring
-      ;magit-inhibit-save-previous-winconf t
-      ;transient-values '((magit-commit "--gpg-sign=5F6C0EA160557395")
-                         ;(magit-rebase "--autosquash" "--gpg-sign=5F6C0EA160557395")
-                         ;(magit-pull "--rebase" "--gpg-sign=5F6C0EA160557395")))
-
+                                        ;magit-inhibit-save-previous-winconf t
+                                        ;transient-values '((magit-commit "--gpg-sign=5F6C0EA160557395")
+                                        ;(magit-rebase "--autosquash" "--gpg-sign=5F6C0EA160557395")
+                                        ;(magit-pull "--rebase" "--gpg-sign=5F6C0EA160557395")))
+(setq org-babel-tmux-terminal "alacritty")
 ;; :lang org
 (setq org-directory "~/org"
       ;; org-archive-location (concat org-directory ".archive/%s::")
@@ -148,12 +199,12 @@
 
 ;; Exports to separate directories depending on file extension
 (defvar org-export-output-directory-prefix "export_" "prefix of directory used for org-mode export")
-    (defadvice org-export-output-file-name (before org-add-export-dir activate)
-      "Modifies org-export to place exported files in a different directory"
-      (when (not pub-dir)
-          (setq pub-dir (concat org-export-output-directory-prefix (substring extension 1)))
-          (when (not (file-directory-p pub-dir))
-           (make-directory pub-dir))))
+(defadvice org-export-output-file-name (before org-add-export-dir activate)
+  "Modifies org-export to place exported files in a different directory"
+  (when (not pub-dir)
+    (setq pub-dir (concat org-export-output-directory-prefix (substring extension 1)))
+    (when (not (file-directory-p pub-dir))
+      (make-directory pub-dir))))
 
 ;; (after! org
 ;;   (add-to-list 'org-modules 'org-habit t))
@@ -215,10 +266,10 @@
   ;; :bind (:map org-mode-map
   ;;             :leader
   ;;             "a p t" #'anki-editor-push-tree)
-              ;; ("<f12>" . anki-editor-cloze-region-auto-incr)
-              ;; ("<f11>" . anki-editor-cloze-region-dont-incr)
-              ;; ("<f10>" . anki-editor-reset-cloze-number)
-              ;; ("<f9>"  . anki-editor-push-tree))
+  ;; ("<f12>" . anki-editor-cloze-region-auto-incr)
+  ;; ("<f11>" . anki-editor-cloze-region-dont-incr)
+  ;; ("<f10>" . anki-editor-reset-cloze-number)
+  ;; ("<f9>"  . anki-editor-push-tree))
   :hook (org-capture-after-finalize . anki-editor-reset-cloze-number) ; Reset cloze-number after each capture.
   :config
   (setq anki-editor-create-decks t ;; Allow anki-editor to create a new deck if it doesn't exist
@@ -251,4 +302,12 @@
 
 ;; Yasnippet
 (setq yas-snippet-dirs (append yas-snippet-dirs
-        '("~/.config/doom/snippets"))) ;; replace with your folder for snippets
+                               '("~/.config/doom/snippets"))) ;; replace with your folder for snippets
+
+;; Projectile
+(setq projectile-project-search-path '("~/Development/" "~/Code/"))
+;; projectile
+(after! projectile
+  (setq projectile-enable-caching nil
+        projectile-indexing-method 'alien))
+

@@ -20,7 +20,7 @@
        ;;layout            ; auie,ctsrnm is the superior home row
 
        :completion
-       company           ; the ultimate code completion backend
+       ;; company           ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ivy               ; a search engine for love and life
@@ -90,7 +90,7 @@
        ;;direnv
        (docker
         +lsp)
-       ;;editorconfig      ; let someone else argue about tabs vs spaces
+       editorconfig      ; let someone else argue about tabs vs spaces
        ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
        ;;gist              ; interacting with github gists
@@ -102,8 +102,8 @@
        ;;pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
        rgb               ; creating color strings
-       taskrunner        ; taskrunner for all your projects
-       ;;terraform         ; infrastructure as code
+       ;; taskrunner        ; taskrunner for all your projects
+       terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
 
@@ -113,7 +113,7 @@
 
        :lang
        ;;agda              ; types of types of types of types...
-       (cc +lsp)           ; C/C++/Obj-C madness
+       ;; (cc +lsp)           ; C/C++/Obj-C madness
        ;;clojure           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
@@ -137,7 +137,7 @@
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ;
        json              ; At least it ain't XML
-       ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
+       (java +lsp)         ; the poster child for carpal tunnel syndrome
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
@@ -154,12 +154,13 @@
        (org                ; organize your plain life in plain text
         +dragndrop         ; drag & drop files/images into org buffers
         ;;+hugo            ; use Emacs for hugo blogging
+        +journal           ; enable org-journal integration
         +jupyter           ; ipython/jupyter support for babel
         +pandoc            ; export-with-pandoc support
         +gnuplot           ; who doesn't like pretty pictures
         ;;+pomodoro        ; be fruitful with the tomato technique
-        +present           ; using org-mode for presentations
-        ;; +roam             ; wander around notes
+        ;; +present        ; using org-mode for presentations
+        ;; +roam           ; wander around notes
         +pretty)
        ;;perl              ; write code no one else can comprehend
        ;;php               ; perl's insecure younger brother
