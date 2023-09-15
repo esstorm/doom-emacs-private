@@ -1,11 +1,51 @@
-#+TITLE: doom-emacs-private
+#+TITLE: Personal Emacs Doom Config
 
-My private module for [doom-emacs](https://github.com/hlissner/doom-emacs).
+My private [[https://github.com/hlissner/doom-emacs][doom-emacs]] literate config.
 
-Most of it comes from hlissner's own private [[https://github.com/hlissner/doom-emacs-private][config]].
+-----
 
-** Install
+* Getting Started
+The first step is to install Emacs.
 
+More information is available on the [[https://github.com/doomemacs/doomemacs/blob/master/docs/getting_started.org#install][Doom Installation Guide]].
+
+** Install Emacs
+*** Mac OS
+Pass some compilation flags for support of additional features.
+#+begin_src bash
+brew tap railwaycat/emacsmacport
+brew reinstall emacs-mac \
+   --with-dbus \
+   --with-starter \
+   --with-librsvg \
+   --with-imagemagick \
+   --with-emacs-sexy-icon \
+   --with-native-comp \
+   --with-mac-metal \
+   --with-xwidgets
+
+rm -f /Applications/Emacs.app
+
+# To link the application to default Homebrew App location:
+# Creating the link like this instead of with `ln -s` ensures that Emacs will appear in Spotlight results
+osascript -e 'tell application "Finder" to make alias file to POSIX file "/opt/homebrew/opt/emacs-mac/Emacs.app" at POSIX file "/Applications"'
+#+end_src
+
+*** Ubuntu
+#+begin_src bash
+add-apt-repository ppa:kelleyk/emacs
+apt-get update
+apt-get install emacs27
+#+end_src
+
+
+** Install this config
 #+begin_src bash
 git clone https://github.com/esstorm/doom-emacs-private ~/.config/doom
+#+end_src
+
+** Install Doom
+#+begin_src bash
+git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
+~/.emacs.d/bin/doom install
 #+end_src
