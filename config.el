@@ -49,17 +49,97 @@
 (custom-set-faces!
   `(markdown-code-face :background ,(doom-darken 'bg 0.075)))
 
-(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
 
-(with-eval-after-load "ox-latex"
-  (add-to-list 'org-latex-classes
-               '("jdf2"
-                 "\\documentclass{jdf2}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+;; (defun my/org-export-experience (headline backend info)
+;;   "Custom export filter for experience entries."
+;;   (when (and (eq backend 'latex) (string= (org-element-property :raw-value headline) "Experience"))
+;;     (let* ((entries (org-element-map (org-element-contents headline) 'headline
+;;                     (lambda (h)
+;;                       (let ((company (org-entry-get (org-element-property :begin h) "COMPANY"))
+;;                             (dates (org-entry-get (org-element-property :begin h) "DATES"))
+;;                             (location (org-entry-get (org-element-property :begin h) "LOCATION"))
+;;                             (content (org-export-string-as (org-element-interpret-data (org-element-contents h)) 'latex t)))
+;;                         (format "\\ExperienceEntry{%s}{%s}{%s}{%s}" company dates location content))))))
+;;       (concat (mapconcat #'identity entries "\n")))))
+
+;; Add custom class for LaTeX export
+  ;; (with-eval-after-load "ox-latex"
+  ;;   (add-to-list 'org-latex-classes
+  ;;                 '("developercv"
+  ;;                   "\\documentclass[9pt]{developercv}
+  ;;                   [NO-DEFAULT-PACKAGES]
+  ;;                   [PACKAGES]
+  ;;                   [EXTRA]"
+  ;;                   ("\\section{%s}" . "\\section*{%s}")
+  ;;                   ("\\subsection{%s}" . "\\subsection*{%s}")
+  ;;                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+  ;;                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+  ;;                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
+;; Add custom class for LaTeX export
+
+;; (require 'ox-latex)
+;; (with-eval-after-load "ox-latex"
+;;   (add-to-list 'org-latex-classes
+;;              '("developercv"
+;;                "\\documentclass[9pt]{developercv}
+;;                [NO-DEFAULT-PACKAGES]
+;;                [PACKAGES]
+;;                [EXTRA]"
+;;                ("\\ExperienceSection{%s}" . "\\ExperienceSection*{%s}")
+;;                ("\\EducationSection{%s}" . "\\EducationSection*{%s}")
+;;                ("\\section{%s}" . "\\section*{%s}")
+;;                ("\\subsection{%s}" . "\\subsection*{%s}")
+;;                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;;                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+;;   (add-to-list 'org-export-filter-headline-functions #'my/org-export-experience)
+
+;; ;; Set default directory for custom LaTeX classes if not in the Org file's directory
+;;   (setq org-latex-pdf-process
+;;         '("TEXINPUTS=.:/Users/torres/Documents/cv_17: pdflatex -interaction nonstopmode -output-directory %o %f")))
+;; (with-eval-after-load "ox-latex"
+;;   (add-to-list 'org-latex-classes
+;;                '("jdf2"
+;;                  "\\documentclass{jdf2}"
+;;                  ("\\section{%s}" . "\\section*{%s}")
+;;                  ("\\subsection{%s}" . "\\subsection*{%s}")
+;;                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;;                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+(setq org-latex-classes
+      '(("developercv"
+         "\\documentclass[9pt]{developercv}
+          [NO-DEFAULT-PACKAGES]
+          [PACKAGES]
+          [EXTRA]"
+         ("\\ExperienceSection{%s}" . "\\ExperienceSection*{%s}")
+         ("\\EducationSection{%s}" . "\\EducationSection*{%s}"))))
+
+(setq org-latex-listings t)
+
+(defun org-export-custom-entry (headline)
+  "Custom formatting for Org entries like experience or education."
+  (let* ((title (org-element-property :title headline))
+         (company (org-element-property :COMPANY headline))
+         (dates (org-element-property :DATES headline))
+         (location (org-element-property :LOCATION headline))
+         (content (org-export-as 'latex nil t t)))
+    (format "\\ExperienceEntry{%s}{%s}{%s}{%s}\n"
+            title dates company content)))
+
+(add-to-list 'org-latex-classes
+             '("developercv"
+               "\\documentclass[9pt]{developercv}"
+               ("\\ExperienceSection{%s}" . "\\ExperienceSection*{%s}")
+               ("\\EducationSection{%s}" . "\\EducationSection*{%s}")
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 (setq key-chord-two-keys-delay 0.8)
 (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
