@@ -137,7 +137,6 @@ Bug in Doom Emacs?
                  (fboundp 'evil-jump-item)
                  #'evil-jump-item)
       :leader
-      "a p t" #'anki-editor-push-tree
       "h L" #'global-keycast-mode
       "f t" #'find-in-dotfiles
       "f T" #'browse-dotfiles
@@ -302,9 +301,11 @@ Replace the defaults ~[A]~, ~[B]~ and ~[C]~.
 ;;         keypression-combine-same-keystrokes t
 ;;         keypression-font-face-attribute '(:width normal :height 200 :weight bold)))
 #+end_src
-* Anki
+* Anki :noexport:
+Disabled since I'm not currently using Anki.
+
 Tools to make working with Anki easier.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package anki-editor
   :after org
   ;; :bind (:map org-mode-map

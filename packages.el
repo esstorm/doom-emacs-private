@@ -2,29 +2,29 @@
 ;;; .config/doom/packages.el
 
 ;;; Examples:
-;; (package! some-package)
-;; (package! another-package :recipe (:host github :repo "username/repo"))
-;; (package! builtin-package :disable t)
-(package! kubel :recipe (:host github :repo "abrochard/kubel"))
+;; (package! kubel :recipe (:host github :repo "abrochard/kubel"))
+
+;;; Org
 (package! ob-restclient)
 (package! org-beautify-theme)
+(package! ob-tmux)
+(package! org-superstar)
 ;; (package! org-fancy-priorities)
 ;; (package! org-super-agenda)
-(package! org-superstar)
-(package! org-ref)
-(package! ob-tmux)
+;; (package! org-ref)
+
 ;; (package! org-plot :recipe (:local-repo "lisp" :no-byte-compile t))
 ;; (package! robot-mode)
-(package! jupyter)
+
 (package! key-chord)
 (package! nyan-mode)
 
-;; Create Anki flashcards from Emacs
-(package! anki-connect)
-(package! anki-editor)
+;;; Anki
+;; (package! anki-connect)
+;; (package! anki-editor)
 
 ;; C++
-(package! company-tabnine)
+;; (package! company-tabnine)
 ;; (package! dap-mode)
 ;; (package! walkman :recipe (:host github :repo "abrochard/walkman"))
 
